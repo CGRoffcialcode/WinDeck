@@ -129,15 +129,22 @@ If you modify the source scripts or wish to compile the application yourself, fo
 
 #### Step 1: Get The Source
 
-`git clone [https://github.com/your-username/WinDeck-Nexus.git](https://github.com/your-username/WinDeck-Nexus.git)  cd WinDeck-Nexus   `
+```bash
+git clone https://github.com/your-username/WinDeck-Nexus.git
+cd WinDeck-Nexus
+```
 
 #### Step 2: Install Dependencies
 
-`   Install-Module -Name ps2exe -Force   `
+```powershell
+Install-Module -Name ps2exe -Force
+```
 
 #### Step 3: Run the Build Script
 
-`   .\Build-Installer.ps1   `
+```powershell
+.\Build-Installer.ps1
+```
 
 Upon completion, a new file, WinDeck-Nexus-Installer.exe, will be generated in the root of the project directory.
 
@@ -156,13 +163,39 @@ Navigate to your Source/Plugins/ directory. Create a new folder. The name must b
 
 This file is the plugin's "ID card"—it tells WinDeck Nexus what your plugin is, who made it, and what it needs to do.
 
-`   {      "name": "Discord Status",      "version": "1.0.0",      "author": "Your Name",      "description": "Updates your Discord status via a webhook when a game is launched.",      "permissions": [          "network.access"      ]  }   `
+```json
+{
+    "name": "Discord Status",
+    "version": "1.0.0",
+    "author": "Your Name",
+    "description": "Updates your Discord status via a webhook when a game is launched.",
+    "permissions": [
+        "network.access"
+    ]
+}
+```
 
 #### Step 3: The Logic (onGameLaunch.ps1)
 
 The filename is critical: naming it onGameLaunch.ps1 tells the engine to execute this script during the onGameLaunch event.
 
-`   # This parameter is automatically passed by the OnConnect conductor.  param(      [string]$GameExecutable  )  # Failsafe: If the URL is missing, exit gracefully.  if (-not $webhookUrl) {       Write-Host "Webhook URL not configured."      exit   }  # Create the JSON payload that the Discord API expects.  $body = @{      content = "Now playing **$($GameExecutable -replace '.exe', '')**!"  } | ConvertTo-Json  # This action is only allowed because we declared "network.access"  Invoke-RestMethod -Uri $webhookUrl -Method Post -Body $body   `
+```powershell
+# This parameter is automatically passed by the OnConnect conductor.
+param(
+    [string]$GameExecutable
+)
+# Failsafe: If the URL is missing, exit gracefully.
+if (-not $webhookUrl) {
+    Write-Host "Webhook URL not configured."
+    exit
+}
+# Create the JSON payload that the Discord API expects.
+$body = @{
+    content = "Now playing **$($GameExecutable -replace '.exe', '')**!"
+} | ConvertTo-Json
+# This action is only allowed because we declared "network.access"
+Invoke-RestMethod -Uri $webhookUrl -Method Post -Body $body
+```
 
 ### API Reference
 
@@ -198,5 +231,5 @@ This is the final step to make remote play automated. We will tell Apollo to run
 3.  powershell.exe -ExecutionPolicy Bypass -NoProfile -File "%localappdata%\\WinDeck Nexus\\Core\\OnConnect.ps1" -GameExecutable "{app.game.executable}"
     
 4.  powershell.exe -ExecutionPolicy Bypass -NoProfile -File "%localappdata%\\WinDeck Nexus\\Core\\OnDisconnect.ps1"
-    
-5.  Save your changes. You have now fully integrated WinDeck's automation with your remote streaming setup.#
+
+5.  Save your changes. You have now fully integrated WinDeck's automation with your remote streaming setup.
