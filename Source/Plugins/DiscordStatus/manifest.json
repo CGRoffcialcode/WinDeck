@@ -1,0 +1,9 @@
+{
+    "name": "Discord Status",
+    "version": "1.0.0",
+    "author": "Gemini",
+    "description": "Updates your Discord status via a webhook when a game is launched.",
+    "permissions": [
+        "network.access"
+    ]
+}

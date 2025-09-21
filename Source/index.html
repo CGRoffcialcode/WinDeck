@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WinDeck Nexus Control Center</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .tab-button { transition: all 0.2s ease-in-out; }
+        .tab-button.active { border-color: #3b82f6; color: #3b82f6; background-color: rgba(59, 130, 246, 0.1); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .table-cell { padding: 0.75rem 1rem; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #1f2937; }
+        ::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-200 antialiased min-h-screen">
+
+    <div class="container mx-auto p-4 md:p-8 max-w-5xl">
+
+        <header class="flex items-center justify-between pb-6 border-b border-gray-700">
+            <div>
+                <h1 class="text-3xl font-bold text-white">WinDeck Nexus</h1>
+                <p class="text-gray-400">The Extensible Gaming Platform for Windows</p>
+            </div>
+            <div id="status-indicator" class="flex items-center space-x-2">
+                <div class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                <span class="text-green-400 text-sm font-medium">Connected</span>
+            </div>
+        </header>
+
+        <main class="mt-8">
+            <!-- Tabs Navigation -->
+            <div class="mb-6 border-b border-gray-700">
+                <nav class="-mb-px flex space-x-6" aria-label="Tabs">
+                    <button onclick="showTab('profiles')" class="tab-button active whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm text-gray-400 hover:text-blue-400 hover:border-blue-400" data-tab="profiles">Profiles</button>
+                    <button onclick="showTab('gameProfiles')" class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm text-gray-400 hover:text-blue-400 hover:border-blue-400" data-tab="gameProfiles">Game-Aware Profiles</button>
+                    <button onclick="showTab('plugins')" class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm text-gray-400 hover:text-blue-400 hover:border-blue-400" data-tab="plugins">Plugins</button>
+                    <button onclick="showTab('settings')" class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm text-gray-400 hover:text-blue-400 hover:border-blue-400" data-tab="settings">Settings</button>
+                </nav>
+            </div>
+
+            <!-- Tab Content -->
+            <div>
+                <!-- Profiles Tab -->
+                <div id="profiles-content" class="tab-content active">
+                    <h2 class="text-xl font-semibold text-white mb-4">Manage Profiles</h2>
+                    <p class="text-gray-400 mb-6">Create and configure different profiles for various gaming scenarios.</p>
+                    <div id="profiles-list" class="space-y-4">
+                        <!-- Profiles will be dynamically inserted here -->
+                    </div>
+                    <button id="add-profile-btn" class="mt-6 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 focus:ring-offset-gray-900">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                        Add New Profile
+                    </button>
+                </div>
+
+                <!-- Game-Aware Profiles Tab -->
+                <div id="gameProfiles-content" class="tab-content">
+                    <h2 class="text-xl font-semibold text-white mb-4">Game-Aware Profiles</h2>
+                    <p class="text-gray-400 mb-6">Automatically activate a specific profile when you launch a game.</p>
+                    <div class="bg-gray-800 rounded-lg shadow overflow-hidden">
+                        <table class="min-w-full">
+                            <thead class="bg-gray-700/50">
+                                <tr>
+                                    <th class="table-cell text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Game Executable</th>
+                                    <th class="table-cell text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Assigned Profile</th>
+                                    <th class="table-cell text-right text-xs font-medium text-gray-300 uppercase tracking-wider">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="game-profiles-table" class="divide-y divide-gray-700">
+                                <!-- Game profiles will be dynamically inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                     <button id="add-game-profile-btn" class="mt-6 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 focus:ring-offset-gray-900">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                        Add Game Profile
+                    </button>
+                </div>
+
+                <!-- Plugins Tab -->
+                <div id="plugins-content" class="tab-content">
+                    <h2 class="text-xl font-semibold text-white mb-4">Manage Plugins</h2>
+                    <p class="text-gray-400 mb-6">Extend WinDeck Nexus with community-made plugins.</p>
+                    <div id="plugins-list" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Plugins will be dynamically inserted here -->
+                    </div>
+                </div>
+                
+                 <!-- Settings Tab -->
+                <div id="settings-content" class="tab-content">
+                    <h2 class="text-xl font-semibold text-white mb-4">Global Settings</h2>
+                    <div id="global-settings-container" class="space-y-6">
+                         <!-- Global settings like Discord Webhook will be inserted here -->
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="text-center mt-12 pt-6 border-t border-gray-700">
+            <p class="text-sm text-gray-500">WinDeck Nexus v2.0 "Director's Cut" | Created by Gemini</p>
+        </footer>
+
+    </div>
+    
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-5 right-5 bg-green-600 text-white py-2 px-5 rounded-lg shadow-lg opacity-0 translate-y-10 transition-all duration-300">
+        Settings saved successfully!
+    </div>
+
+<script>
+// --- API Communication ---
+const API_BASE_URL = 'http://localhost:8090';
+
+async function api(endpoint, method = 'GET', body = null) {
+    try {
+        const options = {
+            method,
+            headers: { 'Content-Type': 'application/json' },
+        };
+        if (body) {
+            options.body = JSON.stringify(body);
+        }
+        const response = await fetch(`${API_BASE_URL}/${endpoint}`, options);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        if (response.headers.get("content-type")?.includes("application/json")) {
+            return response.json();
+        }
+        return response.text();
+    } catch (error) {
+        console.error(`API call to ${endpoint} failed:`, error);
+        document.getElementById('status-indicator').innerHTML = `
+            <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+            <span class="text-red-400 text-sm font-medium">Connection Error</span>`;
+        return null;
+    }
+}
+
+// --- State Management ---
+let state = {
+    config: {},
+    plugins: []
+};
+
+// --- Toast Notification ---
+function showToast(message = 'Settings saved successfully!', type = 'success') {
+    const toast = document.getElementById('toast');
+    toast.textContent = message;
+    toast.className = `fixed bottom-5 right-5 text-white py-2 px-5 rounded-lg shadow-lg opacity-0 translate-y-10 transition-all duration-300 ${type === 'success' ? 'bg-green-600' : 'bg-red-600'}`;
+    
+    toast.classList.remove('opacity-0', 'translate-y-10');
+    toast.classList.add('opacity-100', 'translate-y-0');
+
+    setTimeout(() => {
+        toast.classList.remove('opacity-100', 'translate-y-0');
+        toast.classList.add('opacity-0', 'translate-y-10');
+    }, 3000);
+}
+
+
+// --- UI Rendering ---
+function renderAll() {
+    renderProfiles();
+    renderGameProfiles();
+    renderPlugins();
+    renderGlobalSettings();
+}
+
+function renderProfiles() {
+    const list = document.getElementById('profiles-list');
+    if (!list || !state.config.profiles) return;
+    list.innerHTML = state.config.profiles.map((profile, index) => `
+        <div class="bg-gray-800 rounded-lg p-4 shadow">
+            <div class="flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-white">${profile.name}</h3>
+                <div>
+                    <button onclick="setActiveProfile('${profile.name}')" class="px-3 py-1 text-sm rounded-md ${state.config.activeProfile === profile.name ? 'bg-green-600 text-white cursor-default' : 'bg-gray-700 hover:bg-gray-600'}" ${state.config.activeProfile === profile.name ? 'disabled' : ''}>
+                        ${state.config.activeProfile === profile.name ? 'Active' : 'Set Active'}
+                    </button>
+                    <button onclick="deleteProfile(${index})" class="ml-2 px-3 py-1 text-sm rounded-md bg-red-600 hover:bg-red-700 text-white">Delete</button>
+                </div>
+            </div>
+             <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                <div>
+                    <label class="block text-gray-400">Power Plan</label>
+                    <select onchange="updateProfileValue(${index}, 'powerPlan', this.value)" class="w-full mt-1 bg-gray-700 border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                        <option value="High Performance" ${profile.powerPlan === 'High Performance' ? 'selected' : ''}>High Performance</option>
+                        <option value="Balanced" ${profile.powerPlan === 'Balanced' ? 'selected' : ''}>Balanced</option>
+                        <option value="Power Saver" ${profile.powerPlan === 'Power Saver' ? 'selected' : ''}>Power Saver</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-400">Close Apps (comma-separated)</label>
+                    <input type="text" value="${profile.closeApps.join(', ')}" onchange="updateProfileValue(${index}, 'closeApps', this.value.split(',').map(s => s.trim()))" class="w-full mt-1 bg-gray-700 border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function renderGameProfiles() {
+    const tableBody = document.getElementById('game-profiles-table');
+    if (!tableBody || !state.config.gameProfiles) return;
+    const profileNames = state.config.profiles.map(p => p.name);
+
+    tableBody.innerHTML = state.config.gameProfiles.map((gp, index) => `
+        <tr class="hover:bg-gray-700/50">
+            <td class="table-cell">
+                <input type="text" value="${gp.executable}" onchange="updateGameProfileValue(${index}, 'executable', this.value)" class="w-full bg-transparent focus:bg-gray-700 rounded-md p-1">
+            </td>
+            <td class="table-cell">
+                 <select onchange="updateGameProfileValue(${index}, 'profileName', this.value)" class="w-full bg-gray-700 border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                    ${profileNames.map(name => `<option value="${name}" ${gp.profileName === name ? 'selected' : ''}>${name}</option>`).join('')}
+                </select>
+            </td>
+            <td class="table-cell text-right">
+                <button onclick="deleteGameProfile(${index})" class="text-red-400 hover:text-red-300">Delete</button>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function renderPlugins() {
+    const list = document.getElementById('plugins-list');
+    if (!list || !state.plugins) return;
+    list.innerHTML = state.plugins.map(plugin => `
+        <div class="bg-gray-800 rounded-lg p-5 shadow flex flex-col">
+            <div class="flex items-center justify-between mb-3">
+                <h3 class="text-lg font-bold text-white">${plugin.manifest.name} <span class="text-xs font-mono text-gray-400 ml-2">v${plugin.manifest.version}</span></h3>
+                <label class="flex items-center cursor-pointer">
+                    <div class="relative">
+                        <input type="checkbox" class="sr-only" onchange="togglePlugin('${plugin.id}', this.checked)" ${state.config.enabledPlugins.includes(plugin.id) ? 'checked' : ''}>
+                        <div class="block bg-gray-600 w-10 h-6 rounded-full"></div>
+                        <div class="dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition"></div>
+                    </div>
+                </label>
+            </div>
+            <p class="text-gray-400 text-sm flex-grow">${plugin.manifest.description}</p>
+            <p class="text-xs text-gray-500 mt-3">by ${plugin.manifest.author}</p>
+            <div class="mt-4 pt-4 border-t border-gray-700">
+                <h4 class="text-sm font-semibold text-gray-300 mb-2">Permissions Required:</h4>
+                <div class="flex flex-wrap gap-2">
+                    ${plugin.manifest.permissions.length > 0 ? 
+                        plugin.manifest.permissions.map(p => `<span class="px-2 py-1 text-xs rounded-full bg-yellow-900 text-yellow-300 font-mono">${p}</span>`).join('') :
+                        '<span class="text-xs text-gray-500">None</span>'
+                    }
+                </div>
+            </div>
+        </div>
+    `).join('');
+    // Style the toggle
+    document.querySelectorAll('input[type="checkbox"]').forEach(toggle => {
+        const dot = toggle.nextElementSibling.nextElementSibling;
+        if (toggle.checked) {
+            dot.style.transform = 'translateX(100%)';
+            dot.parentElement.previousElementSibling.classList.add('bg-blue-600');
+        } else {
+            dot.style.transform = 'translateX(0)';
+            dot.parentElement.previousElementSibling.classList.remove('bg-blue-600');
+        }
+    });
+}
+
+function renderGlobalSettings() {
+    const container = document.getElementById('global-settings-container');
+    if (!container || !state.config.settings) return;
+
+    let discordWebhookHtml = `
+        <div class="bg-gray-800 p-4 rounded-lg">
+            <label for="discordWebhook" class="block text-md font-medium text-white">Discord Webhook URL</label>
+            <p class="text-sm text-gray-400 mt-1 mb-2">Used by plugins like 'Discord Status' to send notifications. Get this from your Discord server settings.</p>
+            <input type="password" id="discordWebhook" onchange="updateGlobalSetting('discordWebhookUrl', this.value)" value="${state.config.settings.discordWebhookUrl || ''}" class="w-full mt-1 bg-gray-700 border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+        </div>
+    `;
+    container.innerHTML = discordWebhookHtml;
+}
+
+// --- Event Handlers & Actions ---
+function showTab(tabName) {
+    document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+    document.querySelectorAll('.tab-button').forEach(button => button.classList.remove('active'));
+    document.getElementById(`${tabName}-content`).classList.add('active');
+    document.querySelector(`[data-tab='${tabName}']`).classList.add('active');
+}
+
+async function saveConfig() {
+    await api('config', 'POST', state.config);
+    showToast();
+}
+
+// Profile Actions
+document.getElementById('add-profile-btn').addEventListener('click', () => {
+    const newName = prompt("Enter a name for the new profile:", `Profile ${state.config.profiles.length + 1}`);
+    if (newName && !state.config.profiles.find(p => p.name === newName)) {
+        state.config.profiles.push({
+            name: newName,
+            powerPlan: 'High Performance',
+            closeApps: []
+        });
+        renderProfiles();
+        saveConfig();
+    } else if (newName) {
+        alert("A profile with that name already exists.");
+    }
+});
+
+async function deleteProfile(index) {
+    if (confirm(`Are you sure you want to delete the profile "${state.config.profiles[index].name}"?`)) {
+        const deletedProfileName = state.config.profiles[index].name;
+        state.config.profiles.splice(index, 1);
+        
+        // Reset any game profiles that used this profile
+        state.config.gameProfiles.forEach(gp => {
+            if (gp.profileName === deletedProfileName) {
+                gp.profileName = state.config.profiles[0]?.name || ''; // Assign to first available profile
+            }
+        });
+
+        // If the active profile was deleted, set a new active one
+        if (state.config.activeProfile === deletedProfileName) {
+            state.config.activeProfile = state.config.profiles[0]?.name || '';
+        }
+
+        renderAll();
+        saveConfig();
+    }
+}
+
+async function updateProfileValue(index, key, value) {
+    state.config.profiles[index][key] = value;
+    saveConfig();
+}
+
+async function setActiveProfile(name) {
+    state.config.activeProfile = name;
+    renderProfiles();
+    saveConfig();
+}
+
+// Game Profile Actions
+document.getElementById('add-game-profile-btn').addEventListener('click', () => {
+    if(state.config.profiles.length === 0) {
+        alert("You must create at least one main profile before adding a game profile.");
+        return;
+    }
+    state.config.gameProfiles.push({
+        executable: 'game.exe',
+        profileName: state.config.profiles[0].name // Default to the first profile
+    });
+    renderGameProfiles();
+    saveConfig();
+});
+
+async function deleteGameProfile(index) {
+    state.config.gameProfiles.splice(index, 1);
+    renderGameProfiles();
+    saveConfig();
+}
+
+async function updateGameProfileValue(index, key, value) {
+    state.config.gameProfiles[index][key] = value;
+    saveConfig();
+}
+
+// Plugin Actions
+async function togglePlugin(pluginId, isEnabled) {
+    const index = state.config.enabledPlugins.indexOf(pluginId);
+    if (isEnabled && index === -1) {
+        state.config.enabledPlugins.push(pluginId);
+    } else if (!isEnabled && index > -1) {
+        state.config.enabledPlugins.splice(index, 1);
+    }
+    // Need to re-render to update the visual state of the toggle immediately
+    renderPlugins();
+    saveConfig();
+}
+
+// Settings Actions
+async function updateGlobalSetting(key, value) {
+    if (!state.config.settings) {
+        state.config.settings = {};
+    }
+    state.config.settings[key] = value;
+    saveConfig();
+}
+
+// --- Initialization ---
+async function initialize() {
+    const config = await api('config');
+    const plugins = await api('plugins');
+
+    if (config && plugins) {
+        state.config = config;
+        state.plugins = plugins;
+        renderAll();
+    }
+}
+
+document.addEventListener('DOMContentLoaded', initialize);
+</script>
+</body>
+</html>
