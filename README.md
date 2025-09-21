@@ -199,6 +199,4 @@ This is the final step to make remote play automated. We will tell Apollo to run
     
 4.  powershell.exe -ExecutionPolicy Bypass -NoProfile -File "%localappdata%\\WinDeck Nexus\\Core\\OnDisconnect.ps1"
     
-5.  Save your changes. You have now fully integrated WinDeck's automation with your remote streaming setup.#   W i n D e c k 
- 
- 
+5.  Save your changes. You have now fully integrated WinDeck's automation with your remote streaming setup.#
