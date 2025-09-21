@@ -129,15 +129,15 @@ If you modify the source scripts or wish to compile the application yourself, fo
 
 #### Step 1: Get The Source
 
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   git clone [https://github.com/your-username/WinDeck-Nexus.git](https://github.com/your-username/WinDeck-Nexus.git)  cd WinDeck-Nexus   `
+`git clone [https://github.com/your-username/WinDeck-Nexus.git](https://github.com/your-username/WinDeck-Nexus.git)  cd WinDeck-Nexus   `
 
 #### Step 2: Install Dependencies
 
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   Install-Module -Name ps2exe -Force   `
+`   Install-Module -Name ps2exe -Force   `
 
 #### Step 3: Run the Build Script
 
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   .\Build-Installer.ps1   `
+`   .\Build-Installer.ps1   `
 
 Upon completion, a new file, WinDeck-Nexus-Installer.exe, will be generated in the root of the project directory.
 
@@ -156,13 +156,13 @@ Navigate to your Source/Plugins/ directory. Create a new folder. The name must b
 
 This file is the plugin's "ID card"—it tells WinDeck Nexus what your plugin is, who made it, and what it needs to do.
 
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   {      "name": "Discord Status",      "version": "1.0.0",      "author": "Your Name",      "description": "Updates your Discord status via a webhook when a game is launched.",      "permissions": [          "network.access"      ]  }   `
+`   {      "name": "Discord Status",      "version": "1.0.0",      "author": "Your Name",      "description": "Updates your Discord status via a webhook when a game is launched.",      "permissions": [          "network.access"      ]  }   `
 
 #### Step 3: The Logic (onGameLaunch.ps1)
 
 The filename is critical: naming it onGameLaunch.ps1 tells the engine to execute this script during the onGameLaunch event.
 
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   # This parameter is automatically passed by the OnConnect conductor.  param(      [string]$GameExecutable  )  # Failsafe: If the URL is missing, exit gracefully.  if (-not $webhookUrl) {       Write-Host "Webhook URL not configured."      exit   }  # Create the JSON payload that the Discord API expects.  $body = @{      content = "Now playing **$($GameExecutable -replace '.exe', '')**!"  } | ConvertTo-Json  # This action is only allowed because we declared "network.access"  Invoke-RestMethod -Uri $webhookUrl -Method Post -Body $body   `
+`   # This parameter is automatically passed by the OnConnect conductor.  param(      [string]$GameExecutable  )  # Failsafe: If the URL is missing, exit gracefully.  if (-not $webhookUrl) {       Write-Host "Webhook URL not configured."      exit   }  # Create the JSON payload that the Discord API expects.  $body = @{      content = "Now playing **$($GameExecutable -replace '.exe', '')**!"  } | ConvertTo-Json  # This action is only allowed because we declared "network.access"  Invoke-RestMethod -Uri $webhookUrl -Method Post -Body $body   `
 
 ### API Reference
 
