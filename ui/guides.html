@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <div class="container">
+        <h1>🚀 WinDeck Nexus Configuration Hub</h1>
+        
+        <div class="section">
+            <h2>Adding Emulated Games (EmuDeck / Steam ROM Manager)</h2>
+            <p>
+                WinDeck Nexus automatically finds all games in your Steam library. The best way to add emulated games is to make them part of your Steam library using a tool called <b>Steam ROM Manager</b>.
+            </p>
+            <ol>
+                <li><b>Set up your emulators.</b> First, install and configure your emulators (like Dolphin for GameCube, PCSX2 for PS2, etc.) on your PC. Make sure they can launch games directly.</li>
+                <li><b>Install Steam ROM Manager.</b> Download it from its official GitHub page.</li>
+                <li><b>Run Steam ROM Manager.</b> The tool will present you with a list of "Parsers". Enable the parsers for the emulators you have installed.</li>
+                <li><b>Configure Parsers.</b> For each parser, you'll need to tell it where your game ROMs are located (e.g., `D:\Games\ROMs\GameCube`).</li>
+                <li><b>Generate App List.</b> Run the tool to scan for your ROMs. It will automatically fetch artwork and information for them.</li>
+                <li><b>Save App List.</b> This is the crucial step. Saving the list will add all your emulated games as non-Steam shortcuts directly into your Steam library.</li>
+            </ol>
+            <p>
+                After you've done this, **restart WinDeck Nexus**. Its automatic scanner will now see all your emulated games as part of your Steam library and they will appear in the main UI, complete with artwork!
+            </p>
+        </div>
+
+        <div class="section">
+            <h2>Adding Custom Apps (like Apollo)</h2>
+            <p>
+                Just like with emulators, the most seamless way to add any external program is to add it to Steam as a "Non-Steam Game".
+            </p>
+            <ol>
+                <li>Open the normal Steam desktop client.</li>
+                <li>In the bottom-left corner, click <b>"ADD A GAME"</b>, then <b>"Add a Non-Steam Game..."</b>.</li>
+                <li>Click <b>"BROWSE..."</b> and find the main executable file for your application (e.g., <code>Apollo.exe</code>).</li>
+                <li>Click "Add Selected Programs". You can then right-click the entry in your Steam library to change its name and add custom artwork.</li>
+            </ol>
+            <p>
+                Once added, **restart WinDeck Nexus**. The app will appear in your library.
+            </p>
+        </div>
+    </div>
+</body>
+</html>

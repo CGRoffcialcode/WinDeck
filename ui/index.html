@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WinDeck Nexus</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="background-overlay"></div>
+    <header class="main-header">
+        <nav class="main-nav">
+            <a href="#" class="nav-item active">🎮 LIBRARY</a>
+            <a href="#" class="nav-item">🛒 STORE</a>
+            <a href="#" class="nav-item">⚙️ SETTINGS</a>
+        </nav>
+        <div class="system-tray" id="date-time"></div>
+    </header>
+
+    <main class="game-grid-container">
+        <h1 class="grid-title">YOUR GAMES</h1>
+        <div class="game-grid" id="game-grid">
+            <div class="loading-text">Scanning for games...</div>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="prompt"><span class="button-icon">A</span> LAUNCH</div>
+        <div class="prompt"><span class="button-icon">B</span> BACK</div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const gameGrid = document.getElementById('game-grid');
+            const navItems = document.querySelectorAll('.nav-item');
+            const GRID_COLUMNS = 4;
+            let gameTiles = [];
+            let activeTileIndex = 0;
+            let activeNavIndex = 0;
+
+            // --- Receive Game Library from C++ Backend ---
+            window.chrome.webview.addEventListener('message', event => {
+                const games = JSON.parse(event.data);
+                gameGrid.innerHTML = ''; // Clear "Scanning..." message
+                games.forEach(game => {
+                    const tile = document.createElement('div');
+                    tile.className = 'game-tile';
+                    if (game.path) tile.dataset.path = game.path;
+
+                    const img = document.createElement('img');
+                    // If it's a Steam game, fetch the official art
+                    if (game.appId) {
+                        img.src = `https://cdn.akamai.steamstatic.com/steam/apps/${game.appId}/library_600x900.jpg`;
+                    } else {
+                        // Use a placeholder for non-Steam games
+                        img.src = `https://via.placeholder.com/280x420.png?text=${encodeURIComponent(game.name)}`;
+                    }
+                    img.alt = game.name;
+                    tile.appendChild(img);
+                    gameGrid.appendChild(tile);
+                });
+
+                gameTiles = document.querySelectorAll('.game-tile');
+                if (gameTiles.length > 0) setActiveTile(0);
+            });
+
+            function setActiveTile(index) {
+                if (!gameTiles[index]) return;
+                if (gameTiles[activeTileIndex]) gameTiles[activeTileIndex].classList.remove('active');
+                activeTileIndex = index;
+                gameTiles[activeTileIndex].classList.add('active');
+                gameTiles[activeTileIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+
+            function setActiveNav(index) {
+                if (!navItems[index]) return;
+                navItems[activeNavIndex].classList.remove('active');
+                activeNavIndex = index;
+                navItems[activeNavIndex].classList.add('active');
+            }
+            
+            // --- Gamepad Input ---
+            // ... (The gamepad polling logic is the same as the previous "Big Picture" version) ...
+            // ADD THIS inside the `if (now - lastTimestamp > BUTTON_DEBOUNCE)` block:
+
+            // LB/RB for Tab Switching
+            if (gp.buttons[4]?.pressed) { // LB
+                setActiveNav(activeNavIndex - 1 < 0 ? navItems.length - 1 : activeNavIndex - 1);
+                moved = true;
+            } else if (gp.buttons[5]?.pressed) { // RB
+                setActiveNav(activeNavIndex + 1 >= navItems.length ? 0 : activeNavIndex + 1);
+                moved = true;
+            }
+
+            // The rest of the JS for clock, keyboard, and C++ communication remains the same
+        });
+    </script>
+</body>
+</html>

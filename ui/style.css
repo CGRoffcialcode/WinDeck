@@ -1,0 +1,199 @@
+/* --- WinDeck Nexus: Big Picture Theme ---
+  This theme emulates Steam's Big Picture mode.
+  Customize the look and feel by editing the variables below.
+*/
+:root {
+  /* -- Colors -- */
+  --steam-dark-blue: #141920;
+  --steam-medium-blue: #1b2838;
+  --steam-light-blue-accent: #66c0f4;
+  --steam-font-color: #c5c3c0;
+  --steam-font-color-muted: #7a8b9d;
+  --steam-glow-color: rgba(102, 192, 244, 0.8);
+
+  /* -- Layout & Sizing -- */
+  --header-height: 70px;
+  --footer-height: 60px;
+  --base-font-size: 16px;
+  --grid-gap: 30px;
+  --tile-aspect-ratio: 2 / 3;
+
+  /* -- Effects & Animations -- */
+  --tile-border-radius: 8px;
+  --focus-transition-speed: 0.15s;
+  --background-noise-opacity: 0.03;
+}
+
+/* --- Base & Body --- */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Motiva Sans', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  color: var(--steam-font-color);
+  background-color: var(--steam-dark-blue);
+  background-image: radial-gradient(circle at top left, var(--steam-medium-blue) 0%, var(--steam-dark-blue) 70%);
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  user-select: none; /* Disable text selection */
+}
+
+/* --- Animated Noise Background --- */
+.background-overlay::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 600 600' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: var(--background-noise-opacity);
+  z-index: -1;
+}
+
+
+/* --- Header --- */
+.main-header {
+  height: var(--header-height);
+  background: linear-gradient(to bottom, rgba(20, 25, 32, 0.9), rgba(20, 25, 32, 0));
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 40px;
+  flex-shrink: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 10;
+}
+
+.main-nav {
+  display: flex;
+  gap: 30px;
+}
+
+.nav-item {
+  color: var(--steam-font-color-muted);
+  text-decoration: none;
+  font-size: 1.1rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.nav-item.active, .nav-item:hover {
+  color: var(--steam-font-color);
+  text-shadow: 0 0 10px var(--steam-glow-color);
+}
+
+.system-tray {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
+
+#date-time {
+  text-align: right;
+}
+
+#time {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+#date {
+  font-size: 0.9rem;
+  color: var(--steam-font-color-muted);
+}
+
+.user-profile {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  font-size: 1.1rem;
+}
+
+
+/* --- Game Grid --- */
+.game-grid-container {
+  flex-grow: 1;
+  padding: var(--header-height) 50px var(--footer-height);
+  overflow-y: auto;
+}
+.game-grid-container::-webkit-scrollbar { display: none; } /* Hide scrollbar */
+
+.grid-title {
+  font-size: 1.2rem;
+  font-weight: 300;
+  letter-spacing: 2px;
+  color: var(--steam-font-color-muted);
+  margin: 30px 0;
+}
+
+.game-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: var(--grid-gap);
+}
+
+.game-tile {
+  aspect-ratio: var(--tile-aspect-ratio);
+  border: 3px solid transparent;
+  border-radius: var(--tile-border-radius);
+  transition: all var(--focus-transition-speed) ease-out;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+}
+
+.game-tile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: calc(var(--tile-border-radius) - 3px);
+}
+
+/* --- The "Big Picture" Focus Effect --- */
+.game-tile.active {
+  transform: scale(1.08);
+  border-color: var(--steam-light-blue-accent);
+  box-shadow: 0 0 25px 5px var(--steam-glow-color);
+}
+
+
+/* --- Footer --- */
+.main-footer {
+  height: var(--footer-height);
+  background: linear-gradient(to top, rgba(20, 25, 32, 0.9), rgba(20, 25, 32, 0));
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 30px;
+  padding: 0 40px;
+  flex-shrink: 0;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+
+.prompt {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--steam-font-color-muted);
+}
+
+.button-icon {
+  background-color: var(--steam-font-color-muted);
+  color: var(--steam-dark-blue);
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+}
