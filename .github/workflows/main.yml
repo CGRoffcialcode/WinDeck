@@ -5,8 +5,8 @@ on:
 
 jobs:
   build:
-    # CORRECTED: Switched to an older, more stable runner image.
-    runs-on: windows-2019
+    # Switched to the newest available runner image as a last resort.
+    runs-on: windows-2025
 
     steps:
       - name: Checkout repository
