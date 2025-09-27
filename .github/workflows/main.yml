@@ -1,0 +1,28 @@
+name: Build WinDeck Nexus
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    # Switched to the newest available runner image as a last resort.
+    runs-on: windows-2025
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build Application
+        run: |
+          call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x86
+          rc.exe resources.rc
+          cl.exe WinDeck-Nexus.cpp resources.res /std:c++17 /EHsc /D UNICODE /D _UNICODE /I"WebView2SDK\build\native\include" /link /LIBPATH:"WebView2SDK\build\native\x86" user32.lib shellapi.lib gdi32.lib XInput.lib advapi32.lib WebView2Loader.dll.lib /SUBSYSTEM:WINDOWS
+        shell: cmd
+      
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: WinDeck-Nexus-Build
+          path: |
+            WinDeck-Nexus.exe
+            WebView2SDK/build/native/x86/WebView2Loader.dll
