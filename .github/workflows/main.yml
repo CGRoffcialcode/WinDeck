@@ -11,17 +11,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup MSVC Developer Environment
-        uses: ilammy/msvc-dev-cmd@v1
-        with:
-          arch: x86
-
-      - name: Compile Resources
-        run: rc.exe resources.rc
-        shell: cmd
-
-      - name: Compile and Link with MSVC
+      - name: Build Application
         run: |
+          call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x86
+          rc.exe resources.rc
           cl.exe WinDeck-Nexus.cpp resources.res /std:c++17 /EHsc /D UNICODE /D _UNICODE /I"WebView2SDK\build\native\include" /link /LIBPATH:"WebView2SDK\build\native\x86" user32.lib shellapi.lib gdi32.lib XInput.lib advapi32.lib WebView2Loader.dll.lib /SUBSYSTEM:WINDOWS
         shell: cmd
       
