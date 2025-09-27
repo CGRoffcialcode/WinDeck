@@ -1,5 +1,0 @@
-# Compiled installer
-*.exe
-
-# PowerShell history
-.PSReadline
