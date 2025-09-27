@@ -1,41 +1,40 @@
-# This is the complete build "recipe" for GitHub Actions.
-# It assumes you have the WebView2SDK folder already in your repository.
 name: Build WinDeck Nexus
 
-# This allows you to run the build manually from the "Actions" tab in GitHub.
 on:
   workflow_dispatch:
 
 jobs:
   build:
-    # This tells GitHub to use a fresh Windows virtual machine for the build.
     runs-on: windows-latest
 
     steps:
-      # Step 1: Checks out your repository's code so the workflow can access it.
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Step 2: Sets up the Microsoft Visual C++ (MSVC) developer environment for 32-bit (x86).
       - name: Setup MSVC Developer Environment
         uses: ilammy/msvc-dev-cmd@v1
         with:
           arch: x86
 
-      # Step 3: Compiles the Windows resource file (for the application icon).
       - name: Compile Resources
         run: rc.exe resources.rc
         shell: cmd
 
-      # Step 4: Compiles and links the C++ code using the Clang compiler.
+      # --- NEW DEBUGGING STEP ---
+      # This step will print the contents of the LIB variable.
+      - name: Display Environment Variables
+        run: |
+          echo "LIB variable is:"
+          echo "%LIB%"
+        shell: cmd
+
       - name: Compile and Link with Clang
         run: |
           clang-cl.exe WinDeck-Nexus.cpp resources.res /std:c++17 /EHsc /D UNICODE /D _UNICODE /I"WebView2SDK\build\native\include" /link /LIBPATH:"WebView2SDK\build\native\x86" user32.lib shellapi.lib gdi32.lib XInput.lib advapi32.lib WebView2Loader.dll.lib /SUBSYSTEM:WINDOWS
         shell: cmd
       
-      # Step 5: Packages the final .exe and the required .dll into a downloadable file.
       - name: Upload Build Artifact
-        uses: actions/upload-artifact@v4 # CORRECTED: Updated from v3 to v4
+        uses: actions/upload-artifact@v4
         with:
           name: WinDeck-Nexus-Build
           path: |
