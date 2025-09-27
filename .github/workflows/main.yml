@@ -20,17 +20,9 @@ jobs:
         run: rc.exe resources.rc
         shell: cmd
 
-      # --- NEW DEBUGGING STEP ---
-      # This step will print the contents of the LIB variable.
-      - name: Display Environment Variables
+      - name: Compile and Link with MSVC
         run: |
-          echo "LIB variable is:"
-          echo "%LIB%"
-        shell: cmd
-
-      - name: Compile and Link with Clang
-        run: |
-          clang-cl.exe WinDeck-Nexus.cpp resources.res /std:c++17 /EHsc /D UNICODE /D _UNICODE /I"WebView2SDK\build\native\include" /link /LIBPATH:"WebView2SDK\build\native\x86" user32.lib shellapi.lib gdi32.lib XInput.lib advapi32.lib WebView2Loader.dll.lib /SUBSYSTEM:WINDOWS
+          cl.exe WinDeck-Nexus.cpp resources.res /std:c++17 /EHsc /D UNICODE /D _UNICODE /I"WebView2SDK\build\native\include" /link /LIBPATH:"WebView2SDK\build\native\x86" user32.lib shellapi.lib gdi32.lib XInput.lib advapi32.lib WebView2Loader.dll.lib /SUBSYSTEM:WINDOWS
         shell: cmd
       
       - name: Upload Build Artifact
